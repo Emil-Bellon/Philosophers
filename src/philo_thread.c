@@ -6,7 +6,7 @@
 /*   By: ebellon <ebellon@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 13:50:48 by ebellon           #+#    #+#             */
-/*   Updated: 2021/10/20 13:54:10 by ebellon          ###   ########lyon.fr   */
+/*   Updated: 2021/10/20 14:36:12 by ebellon          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,10 @@ static void	*philo_routine(void *const arg)
 unsigned char	create_philo(t_philo *philo)
 {
 	static uint64_t	philo_id = 0;
+	pthread_attr_t	attribut;
 
+	pthread_attr_init(&attribut);
+	pthread_attr_setdetachstate(&attribut, PTHREAD_CREATE_DETACHED);
 	philo_id++;
 	philo->id = philo_id;
 	philo->t_birth = get_time();
@@ -75,14 +78,10 @@ unsigned char	create_philo(t_philo *philo)
 	philo->lock = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));
 	if (philo->lock && pthread_mutex_init(philo->lock, NULL) != 0)
 		return (EXIT_FAILURE);
-	if ((pthread_create(&philo->thread, NULL, philo_routine, philo)) != 0)
+	if ((pthread_create(&philo->thread, &attribut, philo_routine, philo)) != 0)
 		return (EXIT_FAILURE);
-	if ((pthread_detach(philo->thread)) != 0)
-		return (EXIT_FAILURE);
-	if ((pthread_create(&philo->death_observer, NULL,
+	if ((pthread_create(&philo->death_observer, &attribut,
 				death_routine, philo)) != 0)
-		return (EXIT_FAILURE);
-	if ((pthread_detach(philo->death_observer)) != 0)
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
