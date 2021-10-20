@@ -6,7 +6,7 @@
 /*   By: ebellon <ebellon@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 13:50:48 by ebellon           #+#    #+#             */
-/*   Updated: 2021/10/20 14:44:06 by ebellon          ###   ########lyon.fr   */
+/*   Updated: 2021/10/20 14:47:02 by ebellon          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,11 +75,11 @@ unsigned char	create_philo(t_philo *philo)
 	philo->lock = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));
 	if (philo->lock && pthread_mutex_init(philo->lock, NULL) != 0)
 		return (EXIT_FAILURE);
-	if ((pthread_create(&philo->thread, &attribut, philo_routine, philo)) != 0)
+	if ((pthread_create(&philo->thread, NULL, philo_routine, philo)) != 0)
 		return (EXIT_FAILURE);
 	if ((pthread_detach(philo->thread)) != 0)
 		return (EXIT_FAILURE);
-	if ((pthread_create(&philo->death_observer, &attribut,
+	if ((pthread_create(&philo->death_observer, NULL,
 				death_routine, philo)) != 0)
 		return (EXIT_FAILURE);
 	if ((pthread_detach(philo->death_observer)) != 0)
