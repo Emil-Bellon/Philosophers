@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo_thread.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ebellon <ebellon@student.42lyon.fr>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/10/20 13:50:48 by ebellon           #+#    #+#             */
+/*   Updated: 2021/10/20 13:54:10 by ebellon          ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
-static void	*death_observer_routine(void *const arg)
+static void	*death_routine(void *const arg)
 {
 	t_philo	*self;
 
@@ -68,7 +80,7 @@ unsigned char	create_philo(t_philo *philo)
 	if ((pthread_detach(philo->thread)) != 0)
 		return (EXIT_FAILURE);
 	if ((pthread_create(&philo->death_observer, NULL,
-				death_observer_routine, philo)) != 0)
+				death_routine, philo)) != 0)
 		return (EXIT_FAILURE);
 	if ((pthread_detach(philo->death_observer)) != 0)
 		return (EXIT_FAILURE);

@@ -1,13 +1,25 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   actions.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ebellon <ebellon@student.42lyon.fr>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/10/20 13:50:41 by ebellon           #+#    #+#             */
+/*   Updated: 2021/10/20 13:51:50 by ebellon          ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 uint64_t	philo_talk(t_philo *philo, int action_id)
 {
 	uint64_t	time;
 	static char	*action[5] = {
-		"Has taken a fork",
-		"Is eating",
-		"Is sleeping",
-		"Is thinking",
+		"has taken a fork",
+		"is eating",
+		"is sleeping",
+		"is thinking",
 		"died"
 	};
 
@@ -16,7 +28,7 @@ uint64_t	philo_talk(t_philo *philo, int action_id)
 	time = get_time();
 	if (time < 0)
 		time = 0;
-	printf ("\033[1;34m%8lu \033[1;32m%2lu \033[1;37m-> \033[3;30m%s\033[0m\n",
+	printf ("\033[1;32m%6llu\033[0m %2llu %s\n",
 		time - g_table->start_time, philo->id, action[action_id]);
 	if (pthread_mutex_unlock(&g_table->speak_lock) != 0)
 		return (EXIT_FAILURE);
@@ -27,11 +39,11 @@ unsigned char	philo_take_forks(t_philo *philo)
 {
 	if (pthread_mutex_lock(philo->forks[0]) != 0)
 		return (EXIT_FAILURE);
-    if (philo_talk(philo, A_FORK) == EXIT_FAILURE)
+	if (philo_talk(philo, A_FORK) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
 	if (pthread_mutex_lock(philo->forks[1]) != 0)
 		return (EXIT_FAILURE);
-    if (philo_talk(philo, A_FORK) == EXIT_FAILURE)
+	if (philo_talk(philo, A_FORK) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }

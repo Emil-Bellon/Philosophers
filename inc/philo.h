@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ebellon <ebellon@student.42lyon.fr>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/10/20 13:50:34 by ebellon           #+#    #+#             */
+/*   Updated: 2021/10/20 13:50:35 by ebellon          ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PHILO_H
 # define PHILO_H
 
@@ -72,11 +84,11 @@ extern t_table	*g_table;
 **  utils
 */
 
-uint64_t		ft_atoi(char *s);
-unsigned char	ft_isnum(char *s);
-void			*nmalloc(void **ptr, size_t size, size_t block);
-uint64_t		get_time(void);
-uint64_t		get_time_since(const uint64_t time);
-void			sleep_until(const uint64_t time);
+uint64_t			ft_atoi(char *s);
+unsigned char		ft_isnum(char *s);
+void				*nmalloc(void **ptr, size_t size, size_t block);
+uint64_t			get_time(void);
+uint64_t			get_time_since(const uint64_t time);
+void				sleep_until(const uint64_t time);
 
 #endif
