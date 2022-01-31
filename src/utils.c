@@ -6,7 +6,7 @@
 /*   By: ebellon <ebellon@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 13:50:52 by ebellon           #+#    #+#             */
-/*   Updated: 2021/10/20 13:54:14 by ebellon          ###   ########lyon.fr   */
+/*   Updated: 2022/01/31 15:01:57 by ebellon          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ uint64_t	get_time(void)
 	struct timeval	tv;
 
 	gettimeofday(&tv, NULL);
-	return (tv.tv_sec * (uint64_t)1000 + tv.tv_usec / 1000.0);
+	return (tv.tv_sec * 1000 + tv.tv_usec / 1000.0);
 }
 
 uint64_t	get_time_since(const uint64_t time)
@@ -33,7 +33,7 @@ uint64_t	get_time_since(const uint64_t time)
 void	sleep_until(const uint64_t	time)
 {
 	while (get_time() < time)
-		usleep(500);
+		usleep(50);
 }
 
 uint64_t	ft_atoi(char *s)

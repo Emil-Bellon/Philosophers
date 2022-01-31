@@ -6,7 +6,7 @@
 /*   By: ebellon <ebellon@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 13:50:34 by ebellon           #+#    #+#             */
-/*   Updated: 2021/10/20 13:50:35 by ebellon          ###   ########lyon.fr   */
+/*   Updated: 2022/01/31 17:30:19 by ebellon          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,21 +42,10 @@ typedef struct s_philo
 	uint64_t		n_meal;
 	unsigned char	satisfied;
 	pthread_t		thread;
-	pthread_t		death_observer;
+	struct s_table	*table;
 	pthread_mutex_t	*forks[2];
 	pthread_mutex_t	*lock;
 }				t_philo;
-
-unsigned char		create_philo(t_philo *philo);
-uint64_t			philo_talk(t_philo *const philo, int action_id);
-unsigned char		philo_take_forks(t_philo *const philo);
-unsigned char		philo_eat(t_philo *const philo);
-unsigned char		philo_sleep(t_philo *const philo);
-int					all_satisfied(void);
-
-/*
-**  Table and rules
-*/
 
 typedef struct s_table_rules
 {
@@ -78,7 +67,12 @@ typedef struct s_table
 	t_table_rules	rules;
 }				t_table;
 
-extern t_table	*g_table;
+unsigned char		create_philo(t_philo *philo, t_table *table);
+uint64_t			philo_talk(t_philo *const philo, int action_id);
+unsigned char		philo_take_forks(t_philo *const philo);
+unsigned char		philo_eat(t_philo *const philo);
+unsigned char		philo_sleep(t_philo *const philo);
+int					all_satisfied(t_table *table);
 
 /*
 **  utils

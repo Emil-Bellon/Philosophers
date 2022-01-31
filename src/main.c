@@ -6,44 +6,42 @@
 /*   By: ebellon <ebellon@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 13:50:45 by ebellon           #+#    #+#             */
-/*   Updated: 2021/10/20 13:57:13 by ebellon          ###   ########lyon.fr   */
+/*   Updated: 2022/01/31 17:32:21 by ebellon          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-t_table	*g_table;
-
-int	init_mutex(uint64_t n_forks)
+int	init_mutex(uint64_t n_forks, t_table *table)
 {
 	uint64_t	i;
 
-	g_table->forks = (pthread_mutex_t *)
+	table->forks = (pthread_mutex_t *)
 		malloc(sizeof(pthread_mutex_t) * n_forks);
-	if (!g_table->forks)
+	if (!table->forks)
 		return (EXIT_FAILURE);
 	i = 0;
 	while (i < n_forks)
-		if (pthread_mutex_init(g_table->forks + i++, NULL) != 0)
+		if (pthread_mutex_init(table->forks + i++, NULL) != 0)
 			return (EXIT_FAILURE);
-	if (pthread_mutex_init(&g_table->speak_lock, NULL) != 0)
+	if (pthread_mutex_init(&table->speak_lock, NULL) != 0)
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
 
-static void	init_philo(uint64_t n_philo)
+static void	init_philo(uint64_t n_philo, t_table *table)
 {
 	uint64_t	i;
 
 	i = 0;
 	while (i < n_philo)
 	{
-		g_table->philos[i].forks[0] = g_table->forks + i;
+		table->philos[i].forks[0] = table->forks + i;
 		if (i < n_philo - 1)
-			g_table->philos[i].forks[1] = g_table->forks + i + 1;
+			table->philos[i].forks[1] = table->forks + i + 1;
 		else
-			g_table->philos[i].forks[1] = g_table->forks;
-		create_philo(g_table->philos + i);
+			table->philos[i].forks[1] = table->forks;
+		create_philo(table->philos + i, table);
 		i++;
 		usleep(50);
 	}
@@ -51,19 +49,21 @@ static void	init_philo(uint64_t n_philo)
 
 static int	init_table(t_table_rules rules, uint64_t n_philo)
 {
-	g_table = malloc(sizeof(t_table));
-	if (!g_table || n_philo <= 1)
+	t_table	*table;
+
+	table = malloc(sizeof(t_table));
+	if (!table || n_philo <= 1)
 		return (EXIT_FAILURE);
-	g_table->rules = rules;
-	g_table->philos = malloc(sizeof(t_philo) * n_philo);
-	if (!g_table->philos)
+	table->rules = rules;
+	table->philos = malloc(sizeof(t_philo) * n_philo);
+	if (!table->philos)
 		return (EXIT_FAILURE);
-	g_table->n_philo = n_philo;
-	init_mutex(n_philo);
-	g_table->start_time = get_time();
-	g_table->running = 1;
-	init_philo(n_philo);
-	while (g_table->running && (!rules.b_max_meal || !all_satisfied()))
+	table->n_philo = n_philo;
+	init_mutex(n_philo, table);
+	table->start_time = get_time();
+	table->running = 1;
+	init_philo(n_philo, table);
+	while (table->running && !all_satisfied(table))
 		usleep(50);
 	return (EXIT_SUCCESS);
 }
