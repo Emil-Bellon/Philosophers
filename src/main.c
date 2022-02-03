@@ -6,7 +6,7 @@
 /*   By: ebellon <ebellon@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 13:50:45 by ebellon           #+#    #+#             */
-/*   Updated: 2022/01/31 17:32:21 by ebellon          ###   ########lyon.fr   */
+/*   Updated: 2022/02/03 13:05:48 by ebellon          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,9 +79,9 @@ static int	check_rules(t_table_rules rules, char **av, unsigned int n_philo)
 		|| (rules.b_max_meal && rules.max_meal > INT_MAX))
 		return (printf ("Error: invalid parameters are greater than MAX_INT.\n")
 			* 0 + 1);
-	if (rules.t_die < 1 || rules.t_eat < 1 || rules.t_sleep < 1
+	if (rules.t_die < 60 || rules.t_eat < 60 || rules.t_sleep < 60
 		|| (rules.b_max_meal && rules.max_meal < 1))
-		return (printf ("Error: null or negatives values are not allowed.\n")
+		return (printf ("Error: values under 60ms are not allowed.\n")
 			* 0 + 1);
 	if (n_philo <= 1)
 		return (printf ("Error: at least 2 philosophers needed.\n")

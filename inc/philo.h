@@ -6,7 +6,7 @@
 /*   By: ebellon <ebellon@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 13:50:34 by ebellon           #+#    #+#             */
-/*   Updated: 2022/01/31 17:30:19 by ebellon          ###   ########lyon.fr   */
+/*   Updated: 2022/02/03 13:35:12 by ebellon          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 # define    A_THINK 3
 # define    A_DIE   4
 
-# define    MAX_THREADS 256
+# define    MAX_THREADS 200
 
 /*
 **  Philo
