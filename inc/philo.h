@@ -6,7 +6,7 @@
 /*   By: ebellon <ebellon@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 13:50:34 by ebellon           #+#    #+#             */
-/*   Updated: 2022/02/03 13:35:12 by ebellon          ###   ########lyon.fr   */
+/*   Updated: 2022/02/03 14:36:40 by ebellon          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ typedef struct s_philo
 	pthread_t		thread;
 	struct s_table	*table;
 	pthread_mutex_t	*forks[2];
-	pthread_mutex_t	*lock;
+	pthread_mutex_t	lock;
 }				t_philo;
 
 typedef struct s_table_rules
@@ -59,6 +59,7 @@ typedef struct s_table_rules
 typedef struct s_table
 {
 	unsigned char	running;
+	int				sync;
 	uint64_t		start_time;
 	uint64_t		n_philo;
 	t_philo			*philos;
@@ -80,9 +81,9 @@ int					all_satisfied(t_table *table);
 
 uint64_t			ft_atoi(char *s);
 unsigned char		ft_isnum(char *s);
-void				*nmalloc(void **ptr, size_t size, size_t block);
 uint64_t			get_time(void);
 uint64_t			get_time_since(const uint64_t time);
 void				sleep_until(const uint64_t time);
+int					free_table(t_table *table);
 
 #endif

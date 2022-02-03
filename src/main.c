@@ -6,7 +6,7 @@
 /*   By: ebellon <ebellon@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 13:50:45 by ebellon           #+#    #+#             */
-/*   Updated: 2022/02/03 13:05:48 by ebellon          ###   ########lyon.fr   */
+/*   Updated: 2022/02/03 14:13:10 by ebellon          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@ static void	init_philo(uint64_t n_philo, t_table *table)
 			table->philos[i].forks[1] = table->forks;
 		create_philo(table->philos + i, table);
 		i++;
-		usleep(50);
 	}
+	table->sync = 1;
 }
 
 static int	init_table(t_table_rules rules, uint64_t n_philo)
@@ -62,9 +62,11 @@ static int	init_table(t_table_rules rules, uint64_t n_philo)
 	init_mutex(n_philo, table);
 	table->start_time = get_time();
 	table->running = 1;
+	table->sync = 0;
 	init_philo(n_philo, table);
 	while (table->running && !all_satisfied(table))
 		usleep(50);
+	free_table(table);
 	return (EXIT_SUCCESS);
 }
 

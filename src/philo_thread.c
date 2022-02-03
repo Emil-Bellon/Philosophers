@@ -6,7 +6,7 @@
 /*   By: ebellon <ebellon@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 13:50:48 by ebellon           #+#    #+#             */
-/*   Updated: 2022/01/31 17:28:34 by ebellon          ###   ########lyon.fr   */
+/*   Updated: 2022/02/03 14:18:29 by ebellon          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,10 @@ static void	*philo_routine(void *const arg)
 	t_philo	*self;
 
 	self = (t_philo *)arg;
+	while (!self->table->sync)
+		usleep(100);
+	if (self->id % 2 != 1)
+		usleep(2000);
 	while (!self->satisfied && self->table->running)
 	{
 		if (philo_eat(self) == EXIT_FAILURE)
@@ -41,8 +45,7 @@ unsigned char	create_philo(t_philo *philo, t_table *table)
 	philo->n_meal = 0;
 	philo->satisfied = 0;
 	philo->table = table;
-	philo->lock = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));
-	if (philo->lock && pthread_mutex_init(philo->lock, NULL) != 0)
+	if (pthread_mutex_init(&philo->lock, NULL) != 0)
 		return (EXIT_FAILURE);
 	if ((pthread_create(&philo->thread, NULL, philo_routine, philo)) != 0)
 		return (EXIT_FAILURE);
