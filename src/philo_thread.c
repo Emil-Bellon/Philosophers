@@ -6,31 +6,48 @@
 /*   By: ebellon <ebellon@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 13:50:48 by ebellon           #+#    #+#             */
-/*   Updated: 2022/02/03 14:18:29 by ebellon          ###   ########lyon.fr   */
+/*   Updated: 2022/02/04 15:33:08 by ebellon          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+static int	philo_loop(t_philo *self)
+{
+	if (philo_eat(self) == EXIT_FAILURE)
+		return (0);
+	if (!self->satisfied && philo_sleep(self) == EXIT_FAILURE)
+		return (0);
+	if (self->table->rules.b_max_meal
+		&& self->n_meal >= self->table->rules.max_meal)
+		return (0);
+	return (1);
+}
 
 static void	*philo_routine(void *const arg)
 {
 	t_philo	*self;
 
 	self = (t_philo *)arg;
-	while (!self->table->sync)
-		usleep(100);
+	if (pthread_mutex_lock(&self->table->death_lock) != 0)
+		return (arg);
+	if (pthread_mutex_unlock(&self->table->death_lock) != 0)
+		return (arg);
 	if (self->id % 2 != 1)
 		usleep(2000);
-	while (!self->satisfied && self->table->running)
+	while (1)
 	{
-		if (philo_eat(self) == EXIT_FAILURE)
+		if (!philo_loop(self))
 			return (NULL);
-		if (!self->satisfied && philo_sleep(self) == EXIT_FAILURE)
+		if (pthread_mutex_lock(&self->table->death_lock) != 0)
 			return (NULL);
-		if (self->table->rules.b_max_meal
-			&& self->n_meal >= self->table->rules.max_meal)
+		if (!self->table->running || self->satisfied)
+			break ;
+		if (pthread_mutex_unlock(&self->table->death_lock) != 0)
 			return (NULL);
 	}
+	if (pthread_mutex_unlock(&self->table->death_lock) != 0)
+		return (NULL);
 	return (arg);
 }
 
@@ -52,4 +69,26 @@ unsigned char	create_philo(t_philo *philo, t_table *table)
 	if ((pthread_detach(philo->thread)) != 0)
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
+}
+
+uint64_t	unlock_speak_death(t_philo *philo, uint64_t	time)
+{
+	if (pthread_mutex_unlock(&philo->table->speak_lock) != 0)
+		return (EXIT_FAILURE);
+	if (pthread_mutex_unlock(&philo->table->death_lock) != 0)
+		return (EXIT_FAILURE);
+	return (time);
+}
+
+int	philo_die(t_table *table, int i)
+{
+	philo_talk(table->philos + i, A_DIE);
+	if (pthread_mutex_lock(&table->death_lock) != 0)
+		return (EXIT_FAILURE);
+	table->running = 0;
+	if (pthread_mutex_unlock(&table->death_lock) != 0)
+		return (EXIT_FAILURE);
+	if (pthread_mutex_unlock(&table->speak_lock) != 0)
+		return (EXIT_FAILURE);
+	return (1);
 }

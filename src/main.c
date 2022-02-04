@@ -6,7 +6,7 @@
 /*   By: ebellon <ebellon@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 13:50:45 by ebellon           #+#    #+#             */
-/*   Updated: 2022/02/03 14:13:10 by ebellon          ###   ########lyon.fr   */
+/*   Updated: 2022/02/04 15:10:05 by ebellon          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ int	init_mutex(uint64_t n_forks, t_table *table)
 			return (EXIT_FAILURE);
 	if (pthread_mutex_init(&table->speak_lock, NULL) != 0)
 		return (EXIT_FAILURE);
+	if (pthread_mutex_init(&table->death_lock, NULL) != 0)
+		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
 
@@ -34,6 +36,8 @@ static void	init_philo(uint64_t n_philo, t_table *table)
 	uint64_t	i;
 
 	i = 0;
+	if (pthread_mutex_lock(&table->death_lock) != 0)
+		return ;
 	while (i < n_philo)
 	{
 		table->philos[i].forks[0] = table->forks + i;
@@ -44,12 +48,13 @@ static void	init_philo(uint64_t n_philo, t_table *table)
 		create_philo(table->philos + i, table);
 		i++;
 	}
-	table->sync = 1;
+	if (pthread_mutex_unlock(&table->death_lock) != 0)
+		return ;
 }
 
 static int	init_table(t_table_rules rules, uint64_t n_philo)
 {
-	t_table	*table;
+	t_table		*table;
 
 	table = malloc(sizeof(t_table));
 	if (!table || n_philo <= 1)
@@ -62,10 +67,9 @@ static int	init_table(t_table_rules rules, uint64_t n_philo)
 	init_mutex(n_philo, table);
 	table->start_time = get_time();
 	table->running = 1;
-	table->sync = 0;
 	init_philo(n_philo, table);
 	while (table->running && !all_satisfied(table))
-		usleep(50);
+		usleep(500);
 	free_table(table);
 	return (EXIT_SUCCESS);
 }

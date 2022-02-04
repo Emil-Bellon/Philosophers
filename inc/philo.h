@@ -6,7 +6,7 @@
 /*   By: ebellon <ebellon@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 13:50:34 by ebellon           #+#    #+#             */
-/*   Updated: 2022/02/03 14:57:47 by ebellon          ###   ########lyon.fr   */
+/*   Updated: 2022/02/04 15:30:38 by ebellon          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,10 @@ typedef struct s_table_rules
 typedef struct s_table
 {
 	unsigned char	running;
-	int				sync;
 	uint64_t		start_time;
 	uint64_t		n_philo;
 	t_philo			*philos;
+	pthread_mutex_t	death_lock;
 	pthread_mutex_t	speak_lock;
 	pthread_mutex_t	*forks;
 	t_table_rules	rules;
@@ -85,5 +85,7 @@ uint64_t			get_time(void);
 uint64_t			get_time_since(const uint64_t time);
 void				sleep_until(const uint64_t time);
 int					free_table(t_table *table);
+uint64_t			unlock_speak_death(t_philo *philo, uint64_t	time);
+int					philo_die(t_table *table, int i);
 
 #endif

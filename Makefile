@@ -6,7 +6,7 @@
 #    By: ebellon <ebellon@student.42lyon.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/03 13:39:33 by ebellon           #+#    #+#              #
-#    Updated: 2022/02/03 13:39:58 by ebellon          ###   ########lyon.fr    #
+#    Updated: 2022/02/04 15:33:58 by ebellon          ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,7 +38,8 @@ INCS		=	$(addprefix $(PATH_INC), philo.h)
 #~~~~ Macros ~~~~#
 
 CC			=	gcc
-CFLAGS		=	-Wall -Wextra -Werror
+CFLAGS		=	-Wall -Wextra -Werror 
+#-fsanitize=thread
 RM			=	rm -rf
 
 #========================================#
